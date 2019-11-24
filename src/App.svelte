@@ -109,6 +109,20 @@
     h1 {
         text-align: center;
     }
+
+    @keyframes tahat {
+        0% {
+            opacity: 0;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
 	.grid {
 	    display: grid;
 	    grid-template-rows: repeat(4, 94px);
@@ -129,6 +143,9 @@
         width: 100%;
         height: 100%;
         background-position: -50px center;
+        animation: tahat;
+        animation-duration: 1942ms;
+        animation-iteration-count: infinite;
     }
 
     .playmode-wrapper {
@@ -194,5 +211,5 @@
 </div>
 
 <div class="card next-card" on:click={playTurn2}>
-    <Card card={nextCard} showCard={state.phase === PLACE_CARD}></Card>
+    <Card card={nextCard} showCard={state.phase !== REMOVE_CARDS}></Card>
 </div>
