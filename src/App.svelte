@@ -12,18 +12,16 @@
         playTurn,
         getAllValidMoves,
         isFaceCard,
+        getCardValue,
         playGame
 	} from './game'
 
     let mode = 'human'
 
-    $: {
-        if (mode) { // reset when mode changes
-            state = createInitialState()
-        }
+    $: if (mode) { // reset when mode changes
+        state = createInitialState()
     }
 
-    let pendingMoves = null
     let selectedPosition = -1
 
     let state = createInitialState()
@@ -56,7 +54,6 @@
 	        return
         }
         
-        const { target } = event
         const position = parseInt(currentTarget.dataset.position, 10)
         const card = state.board[position]
         if (state.phase === REMOVE_CARDS) {
@@ -64,7 +61,7 @@
                 return
             }
 
-            if (parseInt(card.value, 10) === 10) {
+            if (getCardValue(card) === 10) {
                 state = playTurn(state, {
                     type: REMOVE_CARDS,
                     index1: position
@@ -101,8 +98,9 @@
         }
     }
 
-    const img = new Image()
-    img.src = 'https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg'
+    const tahatSrc = 'https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg'
+    const preTahat = new Image()
+    preTahat.src = tahatSrc
 </script>
 
 <style>
