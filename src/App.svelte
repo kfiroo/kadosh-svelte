@@ -108,9 +108,15 @@
     const tahatSrc = 'https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg'
     const preTahat = new Image()
     preTahat.src = tahatSrc
+
+    let showStatistics = true
 </script>
 
 <style>
+
+    * {
+            user-select: none;
+    }
     h1 {
         text-align: center;
     }
@@ -154,7 +160,6 @@
     }
 
     .playmode-wrapper {
-        user-select: none;
         margin: 50px auto;
         text-align: center;
     }
@@ -191,10 +196,10 @@
 
     .cards-left {
         display: grid;
-        margin: 50px auto;
-        width: 215px;
-        grid-template-rows: 30px 30px 94px 30px;
-        grid-template-columns: 69px 69px 69px;
+        width: 176px;
+        margin: 10px auto;
+        grid-template-rows: 30px 35px 75px 20px;
+        grid-template-columns: repeat(3, 56px);
         grid-gap: 4px;
         align-items: center;
         justify-items: center;
@@ -206,6 +211,14 @@
 
     .cards-left > span:nth-child(2) {
         grid-area: 2/1/3/4;
+    }
+
+    .cards-left > :global(.card) {
+        transform: scale(0.8);
+    }
+
+    .statics-wrapper {
+        text-align: center;
     }
 </style>
 
@@ -239,13 +252,23 @@
     <Card card={nextCard} showCard={state.phase !== REMOVE_CARDS}></Card>
 </div>
 
-<div class="cards-left">
-    <span>Remaining Cards: {state.deck.length}</span>
-    <span>👑 Remaining Royalty 👑</span>
-    <Card showCard={true} card={{suit: 'clubs', value: 'J'}} />
-    <Card showCard={true} card={{suit: 'hearts', value: 'Q'}} />
-    <Card showCard={true} card={{suit: 'diamonds', value: 'K'}} />
-    <label>{remaining.J}</label>
-    <label>{remaining.Q}</label>
-    <label>{remaining.K}</label>
+<div class="statics-wrapper">
+    <label>
+        Show statistics:
+        <input type="checkbox" bind:checked={showStatistics} />
+    </label>
+
+    {#if (showStatistics)}
+    <div class="cards-left">
+        <span>Remaining Cards: {state.deck.length}</span>
+        <span>👑 Remaining Royalty 👑</span>
+        <Card showCard={true} card={{suit: 'clubs', value: 'J'}} />
+        <Card showCard={true} card={{suit: 'hearts', value: 'Q'}} />
+        <Card showCard={true} card={{suit: 'diamonds', value: 'K'}} />
+        <label>{remaining.J}</label>
+        <label>{remaining.Q}</label>
+        <label>{remaining.K}</label>
+    </div>
+    {/if}
 </div>
+
