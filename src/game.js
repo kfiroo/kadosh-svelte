@@ -252,5 +252,6 @@ module.exports = {
     playTurn,
     getAllValidMoves,
     isFaceCard,
+    getCardValue,
     playGame
 }
