@@ -98,6 +98,13 @@
         }
     }
 
+    $: remaining = _.reduce(state.deck, (acc, card) => {
+        if (isFaceCard(card)) {
+            acc[card.value]++
+        }
+        return acc
+    }, {J: 0, Q: 0, K: 0})
+
     const tahatSrc = 'https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg'
     const preTahat = new Image()
     preTahat.src = tahatSrc
@@ -158,6 +165,7 @@
 
 	.next-card {
         margin: 50px auto;
+        cursor: pointer;
 	}
 	.card {
         width: 69px;
@@ -179,6 +187,25 @@
 
     .selected {
         box-shadow: 0px 0px 2px 4px #eee251;
+    }
+
+    .cards-left {
+        display: grid;
+        margin: 50px auto;
+        width: 215px;
+        grid-template-rows: 30px 30px 94px 30px;
+        grid-template-columns: 69px 69px 69px;
+        grid-gap: 4px;
+        align-items: center;
+        justify-items: center;
+    }
+
+    .cards-left > span:first-child {
+        grid-area: 1/1/2/4;
+    }
+
+    .cards-left > span:nth-child(2) {
+        grid-area: 2/1/3/4;
     }
 </style>
 
@@ -210,4 +237,15 @@
 
 <div class="card next-card" on:click={playTurn2}>
     <Card card={nextCard} showCard={state.phase !== REMOVE_CARDS}></Card>
+</div>
+
+<div class="cards-left">
+    <span>Remaining Cards: {state.deck.length}</span>
+    <span>👑 Remaining Royalty 👑</span>
+    <Card showCard={true} card={{suit: 'clubs', value: 'J'}} />
+    <Card showCard={true} card={{suit: 'hearts', value: 'Q'}} />
+    <Card showCard={true} card={{suit: 'diamonds', value: 'K'}} />
+    <label>{remaining.J}</label>
+    <label>{remaining.Q}</label>
+    <label>{remaining.K}</label>
 </div>
