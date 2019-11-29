@@ -22,6 +22,11 @@
         "start": "sirv public --single",
         "start:dev": "sirv public --single --dev",
         "test": "jest",
-        "deploy": "yarn build && surge ./public --domain kadosh.surge.sh"
+        "deploy": "yarn build && surge --project ./public --domain kadosh.surge.sh"
+    },
+    "git": {
+        "scripts": {
+            "pre-push": "yarn deploy"
+        }
     }
 }

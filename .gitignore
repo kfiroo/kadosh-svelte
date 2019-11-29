@@ -65,3 +65,5 @@ typings/
 /public/bundle.css
 /public/bundle.js
 /yarn.lock
+/public/bundle.css.map
+/public/bundle.js.map
