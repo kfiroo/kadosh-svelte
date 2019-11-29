@@ -62,3 +62,6 @@ typings/
 
 
 .idea
+/public/bundle.css
+/public/bundle.js
+/yarn.lock

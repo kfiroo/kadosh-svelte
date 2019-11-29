@@ -21,6 +21,7 @@
         "dev": "rollup -c -w",
         "start": "sirv public --single",
         "start:dev": "sirv public --single --dev",
-        "test": "jest"
+        "test": "jest",
+        "deploy": "yarn build && surge ./public --domain kadosh.surge.sh"
     }
 }
