@@ -22,7 +22,7 @@
     padding: 10px;
     margin: auto;
     left: 50%;
-    transform: translate(0%, -50%);
+    transform: translateX(-50%);
   }
   .rules-he {
     direction: rtl;

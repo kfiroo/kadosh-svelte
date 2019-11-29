@@ -244,6 +244,10 @@
       justify-content: center;
   }
 
+  .rules-button {
+    direction: rtl;
+  }
+
 </style>
 
 <div class="wrapper">
@@ -280,7 +284,7 @@
 </div>
 
 <div class="buttons">
-    <button on:click={() => showRules('he')}>איך משחקים? 🤔</button>
+    <button class="rules-button" on:click={() => showRules('he')}>איך משחקים? 🤔</button>
 </div>
 
 <Rules lang={showRulesLang} on:close={hideRules} />
