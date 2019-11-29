@@ -1,6 +1,7 @@
 <script>
   import _ from 'lodash'
   import Card from './Card.svelte'
+  import Rules from './Rules.svelte'
 
   import {
     PLACE_CARD,
@@ -93,6 +94,10 @@
       }
     }
   }
+
+  let showRulesLang = null
+  const showRules = lang => showRulesLang = lang
+  const hideRules = () => showRulesLang = null
 
   $: remaining = _.reduce(
     state.deck,
@@ -234,6 +239,11 @@
     justify-self: start;
   }
 
+  .buttons {
+      display: flex;
+      justify-content: center;
+  }
+
 </style>
 
 <div class="wrapper">
@@ -268,3 +278,9 @@
     <Card showCard={true} card={{ suit: 'diamonds', value: 'K' }} />
     <label>{remaining.K}</label>
 </div>
+
+<div class="buttons">
+    <button on:click={() => showRules('he')}>? איך משחקים ?</button>
+</div>
+
+<Rules lang={showRulesLang} on:close={hideRules} />
