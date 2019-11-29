@@ -280,7 +280,7 @@
 </div>
 
 <div class="buttons">
-    <button on:click={() => showRules('he')}>? איך משחקים ?</button>
+    <button on:click={() => showRules('he')}>איך משחקים? 🤔</button>
 </div>
 
 <Rules lang={showRulesLang} on:close={hideRules} />

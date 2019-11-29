@@ -13,19 +13,16 @@
 
 <style>
   .rules {
-    position: fixed;
+    position: absolute;
     top: 0px;
-    left: 0px;
-    right: 0px;
-    height: 100vh;
+    width: 100vw;
+    max-width: 600px;
     background-color: white;
     color: black;
-  }
-  .content {
-    padding: 20px;
-    height: 100%;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
+    padding: 10px;
+    margin: auto;
+    left: 50%;
+    transform: translate(0%, -50%);
   }
   .rules-he {
     direction: rtl;
@@ -34,7 +31,7 @@
     padding: 10px;
   }
   .got-it-wrapper {
-    margin-bottom: 50px;
+    margin: 50px auto;
     display: flex;
     justify-content: center;
   }
@@ -42,46 +39,44 @@
 
 {#if lang === 'he'}
 <div class="rules rules-he">
-    <div class="content">
-        <h4>חוקי המשחק</h4>
-        <p>
-            מטרת המשחק היא להניח את כל קלפי התמונה (J/Q/K) על המסגרת של לוח המשחק בגודל 4x4
-            <br>
-            👑 מלכים בפינות
-            <br>
-            👸 מלכות למעלה ולמטה
-            <br>
-            🤴 נסיכים בימין ושמאל
-        </p>
-        <h4>למשחק יש 2 חלקים:</h4>
-        <h5>חלק ראשון - מניחים קלפים</h5>
-        <p>
-            בחלק הזה המטרה היא להניח את הקלף שבראש החבילה על אחד המקומות הפנויים על הלוח
-            </p><p>
-            קלפים של משפחת המלוכה חייבים להניח במקום המויעד להם
-            </p><p>
-            את שאר הקלפים מותר להניח בכל מקום פנוי, גם על המסגרת
-            </p><p>
-            בשלב זה מפסידים אם יצא קלף תמונה ואין מקום להניח אותו
-            </p><p>
-            ממשיכים להניח קלפים עד שהלוח מלא
-        </p>
-        <h5>חלק 2 - מוציאים קלפים</h5>
-        <p>
-            בחלק זה מוציאים מהלוח זוגות של קלפים שהסכום שלהם 10 או את הקלף 10 בעצמו
-            </p><p>
-            לדוגמא: (5 + 5), (3 + 7) או (A + 9)
-            </p><p>
-            בשלב זה מפסידים אם הלוח מלא ואין מה להוציא
-            </p><p>
-            ממשיכים להוציא קלפים עד שאין יותר קלפים להוציא
-        </p>
+    <h4>חוקי המשחק</h4>
+    <p>
+        מטרת המשחק היא להניח את כל קלפי התמונה (J/Q/K) על המסגרת של לוח המשחק בגודל 4x4
+        <br>
+        👑 מלכים בפינות
+        <br>
+        👸 מלכות למעלה ולמטה
+        <br>
+        🤴 נסיכים בימין ושמאל
+    </p>
+    <h4>למשחק יש 2 חלקים:</h4>
+    <h5>חלק ראשון - מניחים קלפים</h5>
+    <p>
+        בחלק הזה המטרה היא להניח את הקלף שבראש החבילה על אחד המקומות הפנויים על הלוח
+        </p><p>
+        קלפים של משפחת המלוכה חייבים להניח במקום המויעד להם
+        </p><p>
+        את שאר הקלפים מותר להניח בכל מקום פנוי, גם על המסגרת
+        </p><p>
+        בשלב זה מפסידים אם יצא קלף תמונה ואין מקום להניח אותו
+        </p><p>
+        ממשיכים להניח קלפים עד שהלוח מלא
+    </p>
+    <h5>חלק 2 - מוציאים קלפים</h5>
+    <p>
+        בחלק זה מוציאים מהלוח זוגות של קלפים שהסכום שלהם 10 או את הקלף 10 בעצמו
+        </p><p>
+        לדוגמא: (5 + 5), (3 + 7) או (A + 9)
+        </p><p>
+        בשלב זה מפסידים אם הלוח מלא ואין מה להוציא
+        </p><p>
+        ממשיכים להוציא קלפים עד שאין יותר קלפים להוציא
+    </p>
 
-        <div class="got-it-wrapper">
-            <button class="close-rules" on:click={close}>
-                <b>הבנתיי!!🦄</b>
-            </button>
-        </div>
+    <div class="got-it-wrapper">
+        <button class="close-rules" on:click={close}>
+            <b>הבנתיי!! 🤯</b>
+        </button>
     </div>
 </div>
 {/if}
