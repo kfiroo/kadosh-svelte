@@ -26,9 +26,11 @@
     moves = getAllValidMoves(state)
     selectedPosition = -1
   }
+  function restartGame() {
+      state = createInitialState()
+  }
   function playTurn2() {
     if (state.phase === GAME_OVER || state.phase === WINNER) {
-      state = createInitialState()
       return
     }
 
@@ -191,7 +193,7 @@
     grid-template-columns: 1fr min-content 1fr;
     grid-template-rows: 94px;
     align-items: center;
-    grid-gap: 10px;
+    grid-gap: 30px;
   }
 
   .next-card {
@@ -204,6 +206,23 @@
     justify-self: start;
     font-size: 1.4em;
   }
+
+  .restart {
+    grid-area: 1/1/2/2;
+    justify-self: end;
+    width: 1em;
+    color: red;
+    font-size: 42px;
+    font-weight: bold;
+    text-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+    -webkit-transition: -webkit-transform 0.8s ease-in-out;
+            transition: transform 0.8s ease-in-out;
+  }
+  .restart:hover {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+
   .card {
     width: 69px;
     height: 94px;
@@ -277,6 +296,7 @@
 </div>
 
 <div class="next-wrapper">
+    <div class="rtl restart" on:click={restartGame}>⟳</div>
     <div class="card next-card" on:click={playTurn2}>
         <Card card={nextCard} showCard={state.phase !== REMOVE_CARDS} />
     </div>
