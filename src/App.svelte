@@ -199,21 +199,6 @@
     grid-area: 1/2/2/3;
   }
 
-  .restart {
-    grid-area: 1/2/2/3;
-    color: red;
-    font-size: 120px;
-    font-weight: bold;
-    margin-top: -10px;
-    text-shadow: 5px 5px 0px rgba(0,0,0,0.2);
-    -webkit-transition: -webkit-transform 0.8s ease-in-out;
-            transition: transform 0.8s ease-in-out;
-  }
-  .restart:hover {
-    -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-  }
-
   .next-wrapper > span {
     grid-area: 1/3/2/4;
     justify-self: start;
@@ -292,13 +277,10 @@
 </div>
 
 <div class="next-wrapper">
-{#if state.phase === GAME_OVER || state.phase === WINNER}
-    <div class="rtl restart" on:click={playTurn2}>⟳</div>
-{:else}
     <div class="card next-card" on:click={playTurn2}>
         <Card card={nextCard} showCard={state.phase !== REMOVE_CARDS} />
     </div>
-{/if}
+    <span>{state.phase !== GAME_OVER ? state.deck.length : '💀'}</span>
 </div>
 
 <div class="cards-left">
