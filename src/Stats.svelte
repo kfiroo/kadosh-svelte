@@ -8,7 +8,7 @@
 
     $: remaining = _.countBy(deck, 'value')
 
-    const stats = v => {
+    $: stats = v => {
         const r = remaining[v]
         const c = Math.round(r / deck.length * 100)
         return `${r} (${c}%)`
