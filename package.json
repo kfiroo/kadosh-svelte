@@ -12,8 +12,8 @@
         "jest": "^24.9.0"
     },
     "dependencies": {
-        "sirv-cli": "^0.4.4",
         "lodash": "^4.17.15",
+        "sirv-cli": "^0.4.4",
         "svelte-dnd": "^0.0.10"
     },
     "scripts": {

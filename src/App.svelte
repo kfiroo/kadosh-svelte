@@ -2,6 +2,7 @@
   import _ from 'lodash'
   import Card from './Card.svelte'
   import Rules from './Rules.svelte'
+  import Confetti from './Confetti.svelte'
 
   import {
     PLACE_CARD,
@@ -182,7 +183,7 @@
     margin-top: 30px;
     display: grid;
     width: 100%;
-    grid-template-columns: 1fr 69px 1fr;
+    grid-template-columns: 1fr min-content 1fr;
     grid-template-rows: 94px;
     align-items: center;
     grid-gap: 10px;
@@ -191,6 +192,21 @@
   .next-card {
     cursor: pointer;
     grid-area: 1/2/2/3;
+  }
+
+  .restart {
+    grid-area: 1/2/2/3;
+    color: red;
+    font-size: 120px;
+    font-weight: bold;
+    margin-top: -10px;
+    text-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+    -webkit-transition: -webkit-transform 0.8s ease-in-out;
+            transition: transform 0.8s ease-in-out;
+  }
+  .restart:hover {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
   }
 
   .next-wrapper > span {
@@ -223,7 +239,7 @@
   .cards-left {
     display: grid;
     width: 263px;
-    margin: 20px auto;
+    margin: 30px auto;
     grid-template-rows: 66px;
     grid-template-columns: 20px repeat(3, 49px 20px);
     grid-gap: 6px;
@@ -244,33 +260,35 @@
       justify-content: center;
   }
 
-  .rules-button {
+  .rtl {
     direction: rtl;
   }
 
 </style>
 
-<div class="wrapper">
-  <div class="grid" class:disabled={state.phase === GAME_OVER}>
-    {#each state.board as card, i (i)}
-      <div
-        class="card placeholder"
-        class:selected={selectedPosition === i}
-        class:invalid={!isValid(i)}
-        data-position={i}
-        on:click={onBoardClick}>
-        <Card {card} showCard={true} />
-      </div>
-    {/each}
+<div class="grid"
+    class:disabled={state.phase === GAME_OVER}
+    class:winner={state.phase === WINNER}>
+{#each state.board as card, i (i)}
+  <div
+    class="card placeholder"
+    class:selected={selectedPosition === i}
+    class:invalid={!isValid(i)}
+    data-position={i}
+    on:click={onBoardClick}>
+    <Card {card} showCard={true} />
   </div>
+{/each}
+</div>
 
-  <div class="next-wrapper">
+<div class="next-wrapper">
+{#if state.phase === GAME_OVER || state.phase === WINNER}
+    <div class="rtl restart" on:click={playTurn2}>⟳</div>
+{:else}
     <div class="card next-card" on:click={playTurn2}>
         <Card card={nextCard} showCard={state.phase !== REMOVE_CARDS} />
     </div>
-    <span>{state.phase !== GAME_OVER ? state.deck.length : '💀'}</span>
-  </div>
-
+{/if}
 </div>
 
 <div class="cards-left">
@@ -284,7 +302,11 @@
 </div>
 
 <div class="buttons">
-    <button class="rules-button" on:click={() => showRules('he')}>איך משחקים? 🤔</button>
+    <button class="rtl" on:click={() => showRules('he')}>איך משחקים? 🤔</button>
 </div>
 
 <Rules lang={showRulesLang} on:close={hideRules} />
+
+{#if state.phase === GAME_OVER || state.phase === WINNER}
+    <Confetti amount={200}/>
+{/if}
