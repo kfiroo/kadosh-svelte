@@ -4,14 +4,17 @@
 
     export let deck
 
-    const random = value => ({value, suit: _.sample(['spades', 'diamonds', 'clubs', 'hearts'])})
+    const suits = ['spades', 'diamonds', 'clubs', 'hearts']
+    const monkeys = ['🙈', '🙉', '🙊']
+
+    const random = value => ({value, suit: _.sample(suits)})
 
     $: remaining = _.countBy(deck, 'value')
 
     $: stats = v => {
         const r = remaining[v]
         const c = Math.round(r / deck.length * 100)
-        return `${r} (${c}%)`
+        return r ? `${r} (${c}%)` : _.sample(monkeys)
     }
 </script>
 
