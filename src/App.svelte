@@ -307,6 +307,6 @@
 
 <Rules lang={showRulesLang} on:close={hideRules} />
 
-{#if state.phase === GAME_OVER || state.phase === WINNER}
+{#if state.phase === WINNER}
     <Confetti amount={200}/>
 {/if}
