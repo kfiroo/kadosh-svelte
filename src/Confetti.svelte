@@ -31,9 +31,7 @@
 		let frame;
 
 		const d = 12 * 1000
-		const h = window.visualViewport.height
-
-        const dy = h / h / d * 16 * 100
+        const dy = 1 / d * 16 * 100
 
         function move(c) {
             const top = parseFloat(c.top) + dy + c.dy

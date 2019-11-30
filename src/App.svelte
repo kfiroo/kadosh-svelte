@@ -2,6 +2,7 @@
   import _ from 'lodash'
   import Card from './Card.svelte'
   import Rules from './Rules.svelte'
+  import Stats from './Stats.svelte'
   import Confetti from './Confetti.svelte'
 
   import {
@@ -106,17 +107,6 @@
   let showRulesLang = null
   const showRules = lang => showRulesLang = lang
   const hideRules = () => showRulesLang = null
-
-  $: remaining = _.reduce(
-    state.deck,
-    (acc, card) => {
-      if (isFaceCard(card)) {
-        acc[card.value]++
-      }
-      return acc
-    },
-    { J: 0, Q: 0, K: 0 }
-  )
 
   const tahatSrc = 'https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg'
   const preTahat = new Image()
@@ -249,25 +239,6 @@
     box-shadow: 0px 0px 2px 4px #eee251;
   }
 
-  .cards-left {
-    display: grid;
-    width: 263px;
-    margin: 30px auto;
-    grid-template-rows: 66px;
-    grid-template-columns: 20px repeat(3, 49px 20px);
-    grid-gap: 6px;
-  }
-
-  .cards-left > :global(.card) {
-    transform: scale(0.7);
-    transform-origin: 0 0;
-  }
-
-  .cards-left > label {
-    align-self: center;
-    justify-self: start;
-  }
-
   .buttons {
       display: flex;
       justify-content: center;
@@ -303,15 +274,7 @@
     <span>{state.phase !== GAME_OVER ? state.deck.length : '💀'}</span>
 </div>
 
-<div class="cards-left">
-    <span />
-    <Card showCard={true} card={{ suit: 'clubs', value: 'J' }} />
-    <label>{remaining.J}</label>
-    <Card showCard={true} card={{ suit: 'hearts', value: 'Q' }} />
-    <label>{remaining.Q}</label>
-    <Card showCard={true} card={{ suit: 'diamonds', value: 'K' }} />
-    <label>{remaining.K}</label>
-</div>
+<Stats deck={state.deck} />
 
 <div class="buttons">
     <button class="rtl" on:click={() => showRules('he')}>איך משחקים? 🤔</button>
