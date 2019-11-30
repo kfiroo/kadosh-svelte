@@ -38,12 +38,17 @@
 
   $: nextCard = state.deck[state.deck.length - 1]
 
-  const isValid = position =>
-    !!_.find(
-      moves,
-      ({ index, index1, index2 }) =>
+  $: isValid = position => {
+    if (state.phase === REMOVE_CARDS && selectedPosition !== -1) {
+        return !!_.find(moves, ({ index1, index2 }) =>
+            (index1 === position && index2 === selectedPosition) ||
+            (index1 === selectedPosition && index2 === position)
+        )
+    }
+    return !!_.find(moves, ({ index, index1, index2 }) =>
         index === position || index1 === position || index2 === position
     )
+  }
 
   const onBoardClick = ({ currentTarget }) => {
     if (state.phase === GAME_OVER || state.phase === WINNER) {
@@ -224,6 +229,10 @@
     border-radius: 2px;
   }
 
+  .valid {
+    box-shadow: 0px 0px 2px 4px #99d0ee;
+  }
+
   .placeholder:hover {
     box-shadow: 0px 0px 2px 4px #20b825;
   }
@@ -274,6 +283,7 @@
     class="card placeholder"
     class:selected={selectedPosition === i}
     class:invalid={!isValid(i)}
+    class:valid={isValid(i)}
     data-position={i}
     on:click={onBoardClick}>
     <Card {card} showCard={true} />
