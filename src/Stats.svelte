@@ -2,20 +2,22 @@
     import _ from 'lodash'
     import Card from './Card.svelte'
 
-    export let deck
+    import { deck } from './gameStores'
 
     const suits = ['spades', 'diamonds', 'clubs', 'hearts']
     const monkeys = ['🙈', '🙉', '🙊']
 
     const random = value => ({value, suit: _.sample(suits)})
 
-    $: remaining = _.countBy(deck, 'value')
-
-    $: stats = v => {
-        const r = remaining[v]
-        const c = Math.round(r / deck.length * 100)
-        return r ? `${r} (${c}%)` : _.sample(monkeys)
-    }
+    $: remaining = _.countBy($deck, 'value')
+    $: stats = _([5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'])
+        .keyBy()
+        .mapValues(v => {
+            const r = remaining[v] || 0
+            const c = r && Math.round(r / $deck.length * 100)
+            return r ? `${r} (${c}%)` : _.sample(monkeys)
+        })
+        .value()
 </script>
 
 <style>
@@ -61,25 +63,25 @@
 
 <div class="stats">
     <div class="royals">
-        <label>{stats('J')}</label>
+        <label>{stats.J}</label>
         <Card showCard={true} card={random('J')} />
-        <label>{stats('Q')}</label>
+        <label>{stats.Q}</label>
         <Card showCard={true} card={random('Q')} />
-        <label>{stats('K')}</label>
+        <label>{stats.K}</label>
         <Card showCard={true} card={random('K')} />
     </div>
     <div class="numbers">
-        <label>{stats('5')}</label>
+        <label>{stats['5']}</label>
         <Card showCard={true} card={random('5')} />
-        <label>{stats('6')}</label>
+        <label>{stats['6']}</label>
         <Card showCard={true} card={random('6')} />
-        <label>{stats('7')}</label>
+        <label>{stats['7']}</label>
         <Card showCard={true} card={random('7')} />
-        <label>{stats('8')}</label>
+        <label>{stats['8']}</label>
         <Card showCard={true} card={random('8')} />
-        <label>{stats('9')}</label>
+        <label>{stats['9']}</label>
         <Card showCard={true} card={random('9')} />
-        <label>{stats('10')}</label>
+        <label>{stats['10']}</label>
         <Card showCard={true} card={random('10')} />
     </div>
 </div>

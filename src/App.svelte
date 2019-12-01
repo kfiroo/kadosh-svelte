@@ -7,6 +7,9 @@
 
   import { fly } from 'svelte/transition'
 
+  import * as stores from './gameStores'
+  window.gameStores = stores
+
   import {
     PLACE_CARD,
     REMOVE_CARDS,
@@ -14,35 +17,34 @@
     WINNER,
 
     createInitialState,
-    playTurn,
     getAllValidMoves,
     isFaceCard,
     getCardValue,
     playGame
   } from './game'
 
-  let selectedPosition = -1
+  import {
+    validMoves,
+    phase,
+    state,
+    deck,
+    nextCard,
+    selectedPosition,
 
-  let state = createInitialState()
-  let moves
-  $: {
-    moves = getAllValidMoves(state)
-    selectedPosition = -1
-  }
-  function restartGame() {
-      state = createInitialState()
-  }
+    restartGame,
+    playTurn,
+  } from './gameStores'
+
   function playTurn2() {
-    if (state.phase === GAME_OVER || state.phase === WINNER) {
+    if ($phase === GAME_OVER || $phase === WINNER) {
       return
     }
 
-    const action = moves[_.random(moves.length - 1)]
+    const action = $validMoves[_.random($validMoves.length - 1)]
     lastPlayed = action.index || 0
-    state = playTurn(state, action)
+    playTurn(action)
   }
 
-  $: nextCard = state.deck[state.deck.length - 1]
   let lastPlayed = 0
   $: lastPlacedPosition = {
     x: -120 + (lastPlayed % 4) * 80,
@@ -50,31 +52,31 @@
   }
 
   $: isValid = position => {
-    if (state.phase === REMOVE_CARDS && selectedPosition !== -1) {
-        return !!_.find(moves, ({ index1, index2 }) =>
-            (index1 === position && index2 === selectedPosition) ||
-            (index1 === selectedPosition && index2 === position)
+    if ($phase === REMOVE_CARDS && $selectedPosition !== -1) {
+        return !!_.find($validMoves, ({ index1, index2 }) =>
+            (index1 === position && index2 === $selectedPosition) ||
+            (index1 === $selectedPosition && index2 === position)
         )
     }
-    return !!_.find(moves, ({ index, index1, index2 }) =>
+    return !!_.find($validMoves, ({ index, index1, index2 }) =>
         index === position || index1 === position || index2 === position
     )
   }
 
   const onBoardClick = ({ currentTarget }) => {
-    if (state.phase === GAME_OVER || state.phase === WINNER) {
+    if ($phase === GAME_OVER || $phase === WINNER) {
       return
     }
 
     const position = parseInt(currentTarget.dataset.position, 10)
-    const card = state.board[position]
-    if (state.phase === REMOVE_CARDS) {
+    const card = $state.board[position]
+    if ($phase === REMOVE_CARDS) {
       if (!card) {
         return
       }
 
       if (getCardValue(card) === 10) {
-        state = playTurn(state, {
+        playTurn({
           type: REMOVE_CARDS,
           index1: position
         })
@@ -82,33 +84,33 @@
         return
       }
 
-      if (selectedPosition > -1) {
+      if ($selectedPosition > -1) {
         const action = _.find(
-          moves,
+          $validMoves,
           ({ index1, index2 }) =>
-            (index1 === position && index2 === selectedPosition) ||
-            (index1 === selectedPosition && index2 === position)
+            (index1 === position && index2 === $selectedPosition) ||
+            (index1 === $selectedPosition && index2 === position)
         )
 
         if (action) {
-          state = playTurn(state, action)
+          playTurn(action)
           return
         } else {
-          selectedPosition = -1
+          selectedPosition.set(-1)
         }
       }
 
       if (isValid(position)) {
-        selectedPosition = position
+        selectedPosition.set(position)
       }
-    } else if (state.phase === PLACE_CARD) {
-      const action = _.find(moves, ({ index }) => {
+    } else if ($phase === PLACE_CARD) {
+      const action = _.find($validMoves, ({ index }) => {
         return index === position
       })
 
       if (action) {
         lastPlayed = position
-        state = playTurn(state, action)
+        playTurn(action)
       }
     }
   }
@@ -170,6 +172,10 @@
     border-radius: 12px;
   }
 
+  .grid.disabled > * {
+    filter: grayscale(100%);
+  }
+
   .grid.disabled:after {
     content: '';
     background: url(https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg);
@@ -195,6 +201,11 @@
   .next-card {
     cursor: pointer;
     grid-area: 1/2/2/3;
+  }
+
+  .next-card.disabled {
+    cursor: default;
+    filter: grayscale(100%);
   }
 
   .next-wrapper > span {
@@ -245,7 +256,7 @@
   }
 
   .selected {
-    box-shadow: 0px 0px 2px 4px #eee251;
+    box-shadow: 0px 0px 2px 4px #eee251 !important;
   }
 
   .buttons {
@@ -260,12 +271,12 @@
 </style>
 
 <div class="grid"
-    class:disabled={state.phase === GAME_OVER}
-    class:winner={state.phase === WINNER}>
-{#each state.board as card, i (i)}
+    class:disabled={$phase === GAME_OVER}
+    class:winner={$phase === WINNER}>
+{#each $state.board as card, i (i)}
   <div
     class="card placeholder"
-    class:selected={selectedPosition === i}
+    class:selected={$selectedPosition === i}
     class:invalid={!isValid(i)}
     class:valid={isValid(i)}
     data-position={i}
@@ -281,17 +292,18 @@
 
 <div class="next-wrapper">
     <div class="rtl restart" on:click={restartGame}>⟳</div>
-    {#each [nextCard] as card (`${card.value}_${card.suit}`)}
+    {#each [$nextCard] as card (`${card.value}_${card.suit}`)}
       <div class="card next-card" 
+          class:disabled={$phase === GAME_OVER}
           on:click={playTurn2} 
-          out:fly={state.deck.length === 52 ? {} : lastPlacedPosition}>
-          <Card card={nextCard} showCard={state.phase !== REMOVE_CARDS} />
+          out:fly={$deck.length === 52 ? {} : lastPlacedPosition}>
+          <Card card={$nextCard} showCard={$phase !== REMOVE_CARDS} />
       </div>
     {/each}
-    <span>{state.phase !== GAME_OVER ? state.deck.length : '💀'}</span>
+    <span>{$phase !== GAME_OVER ? $deck.length : '💀'}</span>
 </div>
 
-<Stats deck={state.deck} />
+<Stats />
 
 <div class="buttons">
     <button class="rtl" on:click={() => showRules('he')}>איך משחקים? 🤔</button>
@@ -299,6 +311,6 @@
 
 <Rules lang={showRulesLang} on:close={hideRules} />
 
-{#if state.phase === WINNER}
+{#if $phase === WINNER}
     <Confetti amount={200}/>
 {/if}
