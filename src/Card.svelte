@@ -1,6 +1,6 @@
 <script>
 	export let card
-	export let showCard
+    export let showCard
 
     const cardWidth = 69
     const cardHeight = 94
@@ -44,15 +44,9 @@
         width: 69px;
         height: 94px;
 	}
-	.empty {
-        background-color: green;
-        border-radius: 8px;
-        width: 69px;
-        height: 94px;
-    }
 </style>
 
 <div
-    class="{card ? 'card ' + card.suit + '_' + card.value : 'empty'}"
+    class="{card ? 'card ' + card.suit + '_' + card.value : ''}"
     style="background-position: {backgroundPosition}">
 </div>

@@ -5,6 +5,8 @@
   import Stats from './Stats.svelte'
   import Confetti from './Confetti.svelte'
 
+  import { fly } from 'svelte/transition'
+
   import {
     PLACE_CARD,
     REMOVE_CARDS,
@@ -36,10 +38,16 @@
     }
 
     const action = moves[_.random(moves.length - 1)]
+    lastPlayed = action.index || 0
     state = playTurn(state, action)
   }
 
   $: nextCard = state.deck[state.deck.length - 1]
+  let lastPlayed = 0
+  $: lastPlacedPosition = {
+    x: -120 + (lastPlayed % 4) * 80,
+    y: -450 + Math.floor(lastPlayed / 4) * 105
+  }
 
   $: isValid = position => {
     if (state.phase === REMOVE_CARDS && selectedPosition !== -1) {
@@ -99,6 +107,7 @@
       })
 
       if (action) {
+        lastPlayed = position
         state = playTurn(state, action)
       }
     }
@@ -111,8 +120,6 @@
   const tahatSrc = 'https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg'
   const preTahat = new Image()
   preTahat.src = tahatSrc
-
-  let showStatistics = true
 </script>
 
 <style>
@@ -197,6 +204,7 @@
   }
 
   .restart {
+    cursor: pointer;
     grid-area: 1/1/2/2;
     justify-self: end;
     width: 1em;
@@ -215,6 +223,8 @@
   .card {
     width: 69px;
     height: 94px;
+    background-color: green;
+    border-radius: 8px;
   }
 
   .placeholder {
@@ -260,16 +270,24 @@
     class:valid={isValid(i)}
     data-position={i}
     on:click={onBoardClick}>
-    <Card {card} showCard={true} />
+    {#if card}
+      <div out:fly>
+        <Card {card} showCard={true} />
+      </div>
+    {/if}
   </div>
 {/each}
 </div>
 
 <div class="next-wrapper">
     <div class="rtl restart" on:click={restartGame}>⟳</div>
-    <div class="card next-card" on:click={playTurn2}>
-        <Card card={nextCard} showCard={state.phase !== REMOVE_CARDS} />
-    </div>
+    {#each [nextCard] as card (`${card.value}_${card.suit}`)}
+      <div class="card next-card" 
+          on:click={playTurn2} 
+          out:fly={state.deck.length === 52 ? {} : lastPlacedPosition}>
+          <Card card={nextCard} showCard={state.phase !== REMOVE_CARDS} />
+      </div>
+    {/each}
     <span>{state.phase !== GAME_OVER ? state.deck.length : '💀'}</span>
 </div>
 
