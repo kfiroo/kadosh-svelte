@@ -126,7 +126,7 @@
   }
 
   :global(body) {
-      background: darkgreen;
+      background: radial-gradient(transparent 40%, black 170%), darkgreen;
       padding-top: 10px;
 
       color: #ddd;
@@ -155,7 +155,6 @@
     grid-template-columns: repeat(4, 69px);
     grid-gap: 10px;
     padding: 10px;
-    background-color: darkgreen;
     width: 306px;
     height: 406px;
     margin: auto;
