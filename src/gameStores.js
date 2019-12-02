@@ -1,16 +1,10 @@
 import {writable, derived, get} from 'svelte/store'
 import {
-    PLACE_CARD,
     REMOVE_CARDS,
-    GAME_OVER,
-    WINNER,
 
     createInitialState,
     playTurn as playTurnInternal,
     getAllValidMoves,
-    isFaceCard,
-    getCardValue,
-    playGame
   } from './game'
 
 export const state = writable(createInitialState())

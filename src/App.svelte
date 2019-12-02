@@ -45,6 +45,9 @@
     playTurn(action)
   }
 
+  $: deckLengthIndicator = $phase === GAME_OVER ? '💀' : 
+    $phase === WINNER ? '👑' : $deck.length
+
   let lastPlayed = 0
   $: lastPlacedPosition = {
     x: -120 + (lastPlayed % 4) * 80,
