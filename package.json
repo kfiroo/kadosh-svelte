@@ -22,7 +22,8 @@
         "start": "sirv public --single",
         "start:dev": "sirv public --single --dev",
         "test": "jest",
-        "deploy": "yarn build && surge --project ./public --domain kadosh.surge.sh"
+        "surge": "surge --project ./public --domain kadosh.surge.sh --add yotamb@wix.com,yotambarzilay@gmail.com",
+        "deploy": "yarn build && yarn surge"
     },
     "git": {
         "scripts": {
