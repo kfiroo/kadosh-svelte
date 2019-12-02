@@ -30,9 +30,11 @@
     deck,
     nextCard,
     selectedPosition,
+    lastPlaced,
 
     restartGame,
     playTurn,
+    playPosition,
   } from './gameStores'
 
   function playTurn2() {
@@ -41,17 +43,15 @@
     }
 
     const action = $validMoves[_.random($validMoves.length - 1)]
-    lastPlayed = action.index || 0
     playTurn(action)
   }
 
   $: deckLengthIndicator = $phase === GAME_OVER ? '💀' : 
     $phase === WINNER ? '👑' : $deck.length
 
-  let lastPlayed = 0
   $: lastPlacedPosition = {
-    x: -120 + (lastPlayed % 4) * 80,
-    y: -450 + Math.floor(lastPlayed / 4) * 105
+    x: -120 + ($lastPlaced % 4) * 80,
+    y: -450 + Math.floor($lastPlaced / 4) * 105
   }
 
   $: isValid = position => {
@@ -70,52 +70,9 @@
     if ($phase === GAME_OVER || $phase === WINNER) {
       return
     }
-
+  
     const position = parseInt(currentTarget.dataset.position, 10)
-    const card = $state.board[position]
-    if ($phase === REMOVE_CARDS) {
-      if (!card) {
-        return
-      }
-
-      if (getCardValue(card) === 10) {
-        playTurn({
-          type: REMOVE_CARDS,
-          index1: position
-        })
-
-        return
-      }
-
-      if ($selectedPosition > -1) {
-        const action = _.find(
-          $validMoves,
-          ({ index1, index2 }) =>
-            (index1 === position && index2 === $selectedPosition) ||
-            (index1 === $selectedPosition && index2 === position)
-        )
-
-        if (action) {
-          playTurn(action)
-          return
-        } else {
-          selectedPosition.set(-1)
-        }
-      }
-
-      if (isValid(position)) {
-        selectedPosition.set(position)
-      }
-    } else if ($phase === PLACE_CARD) {
-      const action = _.find($validMoves, ({ index }) => {
-        return index === position
-      })
-
-      if (action) {
-        lastPlayed = position
-        playTurn(action)
-      }
-    }
+    playPosition(position)
   }
 
   let showRulesLang = null
