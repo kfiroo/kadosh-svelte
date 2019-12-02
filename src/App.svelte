@@ -207,14 +207,16 @@
     box-shadow: 0px 0px 2px 4px #99d0ee;
   }
 
-  .placeholder:hover {
-    box-shadow: 0px 0px 2px 4px #20b825;
-  }
+  @media (hover: hover) {
+    .placeholder:hover {
+      box-shadow: 0px 0px 2px 4px #20b825;
+    }
 
-  .placeholder.invalid:hover {
-    box-shadow: 0px 0px 2px 4px #b82020;
+    .placeholder.invalid:hover {
+      box-shadow: 0px 0px 2px 4px #b82020;
+    }
   }
-
+  
   .selected {
     box-shadow: 0px 0px 2px 4px #eee251 !important;
   }
