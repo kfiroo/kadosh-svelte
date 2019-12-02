@@ -292,7 +292,7 @@
 
 <div class="next-wrapper">
     <div class="rtl restart" on:click={restartGame}>⟳</div>
-    {#each [$nextCard] as card (`${card.value}_${card.suit}`)}
+    {#each [$nextCard] as card (card ? `${card.value}_${card.suit}` : '')}
       <div class="card next-card" 
           class:disabled={$phase === GAME_OVER}
           on:click={playTurn2} 
