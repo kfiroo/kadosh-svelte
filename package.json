@@ -19,8 +19,8 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "start": "sirv public --single",
-        "start:dev": "sirv public --single --dev",
+        "start": "sirv public --single --host 0.0.0.0",
+        "start:dev": "sirv public --single --dev --host 0.0.0.0",
         "test": "jest",
         "surge": "surge --project ./public --domain kadosh.surge.sh",
         "deploy": "yarn build && yarn surge"
