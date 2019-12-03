@@ -153,7 +153,8 @@
     height: 406px;
     margin: auto;
     position: relative;
-    border: 4px ridge #008000;
+    border: 2px solid #008000;
+    box-shadow: 0px 0px 0px 1px black;
     border-radius: 12px;
   }
 
