@@ -1,6 +1,4 @@
 <script>
-  export let lang;
-  export let close;
   import { Swipe, SwipeItem } from "svelte-swipe";
 </script>
 

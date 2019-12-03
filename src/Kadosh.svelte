@@ -7,7 +7,7 @@
   import { getContext } from "svelte";
   import HelpIcon from "./HelpIcon.svelte";
 
-  const { open, close } = getContext("simple-modal");
+  const { open } = getContext("simple-modal");
 
   import { fly } from "svelte/transition";
 
@@ -81,7 +81,7 @@
     playPosition(position);
   };
 
-  const showRules = lang => open(Rules, { lang, close });
+  const showRules = lang => open(Rules);
 
   const tahatSrc =
     "https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg";
