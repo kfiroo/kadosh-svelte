@@ -1,114 +1,79 @@
 <script>
-	export let lang
-
-    import { createEventDispatcher } from 'svelte'
-
-	const dispatch = createEventDispatcher()
-
-    function close() {
-        dispatch('close')
-    }
-
+  export let lang;
+  export let close;
+  import { Swipe, SwipeItem } from "svelte-swipe";
 </script>
 
 <style>
-  .rules {
-    position: absolute;
-    top: 0px;
-    width: 100vw;
-    max-width: 600px;
-    background-color: white;
-    color: black;
-    padding: 10px;
-    margin: auto;
-    left: 50%;
-    transform: translateX(-50%);
+  :root {
+    --sv-swipe-panel-height: 60vh;
   }
-  .rules-he {
-    direction: rtl;
+
+  :global(.bg) {
+    justify-content: normal !important;
   }
-  .close-rules {
-    padding: 10px;
+
+  :global(.swipeable-item) {
+      padding: 10px 0;
   }
-  .got-it-wrapper {
-    margin: 50px auto;
-    display: flex;
-    justify-content: center;
+
+  :global(.dot) {
+      transition: background-color 200ms;
+  }
+
+  .rules-wrapper {
+    width: 100%;
+  }
+
+  p {
+    line-height: 1.5rem;
   }
 </style>
 
-{#if lang === 'he'}
-<div class="rules rules-he">
-    <h4>חוקי המשחק</h4>
-    <p>
-        מטרת המשחק היא להניח את כל קלפי התמונה (J/Q/K) על המסגרת של לוח המשחק בגודל 4x4
-        <br>
-        👑 מלכים בפינות
-        <br>
-        👸 מלכות למעלה ולמטה
-        <br>
-        🤴 נסיכים בימין ושמאל
-    </p>
-    <h4>למשחק יש 2 חלקים:</h4>
-    <h5>חלק ראשון - מניחים קלפים</h5>
-    <p>
-        בחלק הזה המטרה היא להניח את הקלף שבראש החבילה על אחד המקומות הפנויים על הלוח
-        </p><p>
-        קלפים של משפחת המלוכה חייבים להניח במקום המויעד להם
-        </p><p>
-        את שאר הקלפים מותר להניח בכל מקום פנוי, גם על המסגרת
-        </p><p>
-        בשלב זה מפסידים אם יצא קלף תמונה ואין מקום להניח אותו
-        </p><p>
-        ממשיכים להניח קלפים עד שהלוח מלא
-    </p>
-    <h5>חלק 2 - מוציאים קלפים</h5>
-    <p>
-        בחלק זה מוציאים מהלוח זוגות של קלפים שהסכום שלהם 10 או את הקלף 10 בעצמו
-        </p><p>
-        לדוגמא: (5 + 5), (3 + 7) או (A + 9)
-        </p><p>
-        בשלב זה מפסידים אם הלוח מלא ואין מה להוציא
-        </p><p>
-        ממשיכים להוציא קלפים עד שאין יותר קלפים להוציא
-    </p>
-
-    <div class="got-it-wrapper">
-        <button class="close-rules" on:click={close}>
-            <b>הבנתיי!! 🤯</b>
-        </button>
-    </div>
+<div class="rules-wrapper">
+  <Swipe showIndicators={true}>
+    <SwipeItem>
+      <h4>Game Rules</h4>
+      <p>Kadosh is played with a single deck of cards.</p>
+      <p>
+        The goal of the game is to place all face-cards (K/Q/J) within the frame
+        of the board:
+      </p>
+      <p>
+        👑 Kings in the corners
+        <br />
+        👸 Queens in the top and bottom edges
+        <br />
+        🤴 Jacks in the right and left edges
+      </p>
+    </SwipeItem>
+    <SwipeItem>
+      <h4>Game Phases - Place Cards</h4>
+      <p>
+        In each turn, a card is drawn from the deck, and must be placed in an
+        empty slot:
+      </p>
+      <p>Face-cards must be placed in one of their empty desegnated slots.</p>
+      <p>Other cards can be placed in any of the empty slots.</p>
+      <p>
+        Keep going until you win, or until the board is full. If a face-card is
+        drawn and it has no available slot, it's Game Over!
+      </p>
+    </SwipeItem>
+    <SwipeItem>
+      <h4>Game Phases - Remove 10s</h4>
+      <p>Now that the board is full, it's time to make room for more cards.</p>
+      <p>
+        You can remove any 10s, or pairs of cards with the sum value of 10 (e.g
+        9 + A)
+      </p>
+      <p>
+        Keep going until there are no more cards to remove, then it's back to
+        placing more cards.
+      </p>
+      <p>
+        If the board is full and there are no cards to remove, it's Game Over!
+      </p>
+    </SwipeItem>
+  </Swipe>
 </div>
-{/if}
-
-{#if lang === 'en'}
-<div class="rules">
-    <h4>Kadosh Rules</h4>
-    <p>
-        The goal of the game is to get all the face cards (J, Q & K) on the edges of the 4x4 playing board.
-        <br>
-        👑 Kings go in the corners
-        <br>
-        👸 Queens go on the top and bottom
-        <br>
-        🤴 Jacks go on the left and right
-    </p>
-    <p>
-        The game is played in 2 phases:
-    </p>
-    <h5>Phase 1 - placing cards:</h5>
-    <p>
-        In this phase you will need to place the card at the top of the deck - its right there below the board - in one of the empty places on the board.
-        Face cards can only go in their designated place.
-        The rest of the cards can go where ever you want.
-        <br>
-        You need to place cards until the board is full or you lost.
-    </p>
-    <h5>Phase 2 - removing cards:</h5>
-    <p>
-        In this phase you will remove
-    </p>
-
-    <button class="close-rules" on:click={close}>GOT IT! 🦄</button>
-</div>
-{/if}
