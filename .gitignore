@@ -67,3 +67,4 @@ typings/
 /yarn.lock
 /public/bundle.css.map
 /public/bundle.js.map
+.DS_Store
