@@ -46,6 +46,10 @@ const tryToRemove = (position) => {
     const $selectedPosition = get(selectedPosition)
     selectedPosition.set(-1)
 
+    if ($selectedPosition === position) {
+        return
+    }
+
 	const card = board[position]
 	if (!card) {
 		return
