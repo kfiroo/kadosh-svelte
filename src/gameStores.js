@@ -1,11 +1,16 @@
+import {analytics} from './firebase'
+
 import { writable, derived, get } from 'svelte/store'
 import {
-	REMOVE_CARDS,
 	createInitialState,
 	playTurn as playTurnInternal,
 	getAllValidMoves,
-	PLACE_CARD,
-	getCardValue
+	getCardValue,
+
+    PLACE_CARD,
+	REMOVE_CARDS,
+    GAME_OVER,
+    WINNER
 } from './game'
 import _ from 'lodash'
 
@@ -19,7 +24,13 @@ export const selectedPosition = writable(-1)
 phase.subscribe(($phase) => {
 	if ($phase !== REMOVE_CARDS && get(selectedPosition) !== -1) {
 		selectedPosition.set(-1)
-	}
+    }
+    
+    if ($phase === GAME_OVER) {
+        analytics.logEvent('game_lost')
+    } else if ($phase === WINNER) {
+        analytics.logEvent('game_won')
+    }
 })
 
 export const lastPlaced = writable(0)
@@ -96,5 +107,6 @@ export const playPosition = (position) => {
 }
 
 export const restartGame = () => {
+    analytics.logEvent('restart_game')
 	state.set(createInitialState())
 }

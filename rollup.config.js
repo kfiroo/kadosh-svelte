@@ -4,6 +4,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import rollup_start_dev from './rollup_start_dev';
+import json from 'rollup-plugin-json';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -16,6 +17,7 @@ export default {
 		file: 'public/bundle.js'
 	},
 	plugins: [
+		json(),
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
@@ -35,7 +37,15 @@ export default {
 			browser: true,
 			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
 		}),
-		commonjs(),
+		commonjs({
+			namedExports: {
+				// left-hand side can be an absolute path, a path
+				// relative to the current directory, or the name
+				// of a module in node_modules
+				'node_modules/idb/build/idb.js': ['openDb'],
+				'node_modules/firebase/dist/index.cjs.js': ['initializeApp', 'firestore']
+			  }
+		}),
 
 		// In dev mode, call `npm run start:dev` once
 		// the bundle has been generated
