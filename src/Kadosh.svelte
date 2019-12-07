@@ -1,17 +1,11 @@
 <script>
   import _ from "lodash";
-  import Card from "./Card.svelte";
-  import Rules from "./Rules.svelte";
-  import Stats from "./Stats.svelte";
-  import Confetti from "./Confetti.svelte";
-  import { getContext } from "svelte";
-  import HelpIcon from "./HelpIcon.svelte";
-
-  const { open } = getContext("simple-modal");
-
+  import Card from "./components/Card.svelte";
+  import Confetti from "./components/Confetti.svelte";
+  import QAB from "./components/QuickActionBar.svelte";
   import { fly } from "svelte/transition";
 
-  import * as stores from "./gameStores";
+  import * as stores from "./stores/gameStores";
   window.gameStores = stores;
 
   import {
@@ -37,7 +31,7 @@
     restartGame,
     playTurn,
     playPosition
-  } from "./gameStores";
+  } from "./stores/gameStores";
 
   function playTurn2() {
     if ($phase === GAME_OVER || $phase === WINNER) {
@@ -81,8 +75,6 @@
     playPosition(position);
   };
 
-  const showRules = lang => open(Rules);
-
   const tahatSrc =
     "https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg";
   const preTahat = new Image();
@@ -105,28 +97,6 @@
     padding: 10px 0;
     box-sizing: border-box;
     color: #ddd;
-  }
-
-  .help-wrapper {
-    position: fixed;
-    z-index: 1;
-    bottom: 20px;
-    left: 20px;
-    width: 2em;
-    height: 2em;
-  }
-
-  .help-wrapper > :global(svg) {
-    stroke: rgba(189, 255, 196, 0.4);
-    cursor: pointer;
-    transition: stroke 250ms;
-    width: 100%;
-  }
-
-  @media (hover: hover) {
-    .help-wrapper:hover > :global(svg) {
-      stroke: rgb(82, 201, 94);
-    }
   }
 
   @keyframes tahat {
@@ -248,9 +218,7 @@
   }
 </style>
 
-<div class="help-wrapper" on:click={() => showRules('he')}>
-  <HelpIcon />
-</div>
+<QAB />
 
 <div
   class="grid"
@@ -288,8 +256,6 @@
   {/each}
   <span>{deckLengthIndicator}</span>
 </div>
-
-<Stats />
 
 {#if $phase === WINNER}
   <Confetti amount={200} />
