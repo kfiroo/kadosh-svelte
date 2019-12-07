@@ -45,6 +45,7 @@
   img {
     border-radius: 50%;
     width: 24px;
+    height: 24px;
   }
 </style>
 
