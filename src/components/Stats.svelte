@@ -1,16 +1,17 @@
 <script>
     import _ from 'lodash'
     import Card from './Card.svelte'
-
-    import { deck } from './gameStores'
+    import { deck } from '../stores/gameStores'
 
     const suits = ['spades', 'diamonds', 'clubs', 'hearts']
     const monkeys = ['🙈', '🙉', '🙊']
 
     const random = value => ({value, suit: _.sample(suits)})
+    const NON_FACE_CARDS = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    const FACE_CARDS = ['J', 'Q', 'K']
 
     $: remaining = _.countBy($deck, 'value')
-    $: stats = _([5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'])
+    $: stats = _([...NON_FACE_CARDS, ...FACE_CARDS])
         .keyBy()
         .mapValues(v => {
             const r = remaining[v] || 0
@@ -22,8 +23,6 @@
 
 <style>
     .stats {
-        width: 320px;
-        margin: 30px auto;
         display: grid;
         grid-gap: 10px;
         grid-template-rows: min-content min-content;
@@ -51,7 +50,7 @@
         display: grid;
         grid-gap: 5px;
         grid-template-rows: 20px 66px;
-        grid-template-columns: repeat(6, 49px);
+        grid-template-columns: repeat(5, 49px);
         justify-self: center;
     }
     .numbers > :global(.card) {
@@ -63,25 +62,21 @@
 
 <div class="stats">
     <div class="royals">
-        <label>{stats.J}</label>
-        <Card showCard={true} card={random('J')} />
-        <label>{stats.Q}</label>
-        <Card showCard={true} card={random('Q')} />
-        <label>{stats.K}</label>
-        <Card showCard={true} card={random('K')} />
+        {#each FACE_CARDS as card (card)}
+            <label>{stats[card]}</label>
+            <Card showCard={true} card={random(card)} />
+        {/each}
     </div>
     <div class="numbers">
-        <label>{stats['5']}</label>
-        <Card showCard={true} card={random('5')} />
-        <label>{stats['6']}</label>
-        <Card showCard={true} card={random('6')} />
-        <label>{stats['7']}</label>
-        <Card showCard={true} card={random('7')} />
-        <label>{stats['8']}</label>
-        <Card showCard={true} card={random('8')} />
-        <label>{stats['9']}</label>
-        <Card showCard={true} card={random('9')} />
-        <label>{stats['10']}</label>
-        <Card showCard={true} card={random('10')} />
+        {#each NON_FACE_CARDS.slice(5) as card (card)}
+            <label>{stats[card]}</label>
+            <Card showCard={true} card={random(card)} />
+        {/each}
+    </div>
+    <div class="numbers">
+        {#each NON_FACE_CARDS.slice(0, 5) as card (card)}
+            <label>{stats[card]}</label>
+            <Card showCard={true} card={random(card)} />
+        {/each}
     </div>
 </div>

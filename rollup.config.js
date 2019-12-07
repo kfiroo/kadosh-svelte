@@ -16,6 +16,7 @@ export default {
 		name: 'app',
 		file: 'public/bundle.js'
 	},
+	external: ['lodash'],
 	plugins: [
 		json(),
 		svelte({

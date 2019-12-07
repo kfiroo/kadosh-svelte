@@ -1,5 +1,4 @@
-import {analytics} from './firebase'
-
+import {analytics} from '../firebase'
 import { writable, derived, get } from 'svelte/store'
 import {
 	createInitialState,
@@ -11,8 +10,10 @@ import {
 	REMOVE_CARDS,
     GAME_OVER,
     WINNER
-} from './game'
+} from '../game'
 import _ from 'lodash'
+import {user} from './authStore'
+import {logGame as logGameInner} from '../firebase/stats'
 
 export const state = writable(createInitialState())
 export const validMoves = derived(state, ($state) => getAllValidMoves($state))
@@ -21,6 +22,14 @@ export const nextCard = derived(deck, ($deck) => $deck[$deck.length - 1])
 export const phase = derived(state, ({ phase }) => phase)
 
 export const selectedPosition = writable(-1)
+
+const logGame = (didWin = false) => {
+    const uid = get(user)
+        if (uid) {
+            logGameInner(uid, didWin)
+        }
+}
+
 phase.subscribe(($phase) => {
 	if ($phase !== REMOVE_CARDS && get(selectedPosition) !== -1) {
 		selectedPosition.set(-1)
@@ -28,8 +37,10 @@ phase.subscribe(($phase) => {
     
     if ($phase === GAME_OVER) {
         analytics.logEvent('game_lost')
+        logGame(false)
     } else if ($phase === WINNER) {
         analytics.logEvent('game_won')
+        logGame(true)
     }
 })
 
@@ -108,5 +119,12 @@ export const playPosition = (position) => {
 
 export const restartGame = () => {
     analytics.logEvent('restart_game')
+    
+    // aborting mid-game. if the game had finished, we already logged it
+    const currentPhase = get(phase)
+    if (currentPhase !== GAME_OVER && currentPhase !== WINNER) {
+        logGame(false)
+    }
+
 	state.set(createInitialState())
 }
