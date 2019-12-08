@@ -8,7 +8,7 @@
 
   const displayName = name => {
     const split = name.split(" ");
-    return `${split[0]} ${split[1][0]}.`;
+    return split.length > 1 ? `${split[0]} ${split[1][0]}.` : name;
   };
 </script>
 
