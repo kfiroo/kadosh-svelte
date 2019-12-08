@@ -11,7 +11,7 @@ import {
     GAME_OVER,
     WINNER
 } from '../game'
-import _ from 'lodash'
+import {find, some} from 'lodash-es'
 import {user} from './authStore'
 import {logGame as logGameInner} from '../firebase/stats'
 
@@ -54,7 +54,7 @@ export const playTurn = (action) => {
 }
 
 const placeCard = (position) => {
-	const action = _.find(get(validMoves), ({ index }) => {
+	const action = find(get(validMoves), ({ index }) => {
 		return index === position
 	})
 
@@ -88,7 +88,7 @@ const tryToRemove = (position) => {
 
     const $validMoves = get(validMoves)
 	if ($selectedPosition > -1) {
-		const action = _.find(
+		const action = find(
 			$validMoves,
 			({ index1, index2 }) =>
 				(index1 === position && index2 === $selectedPosition) ||
@@ -101,7 +101,7 @@ const tryToRemove = (position) => {
 		}
 	}
 
-	if (_.some($validMoves, ({ index1, index2 }) => index1 === position || index2 === position)) {
+	if (some($validMoves, ({ index1, index2 }) => index1 === position || index2 === position)) {
 		selectedPosition.set(position)
 	}
 }

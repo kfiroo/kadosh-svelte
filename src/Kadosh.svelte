@@ -1,5 +1,5 @@
 <script>
-  import _ from "lodash";
+  import {random, find} from "lodash-es";
   import Card from "./components/Card.svelte";
   import Confetti from "./components/Confetti.svelte";
   import QAB from "./components/QuickActionBar.svelte";
@@ -38,7 +38,7 @@
       return;
     }
 
-    const action = $validMoves[_.random($validMoves.length - 1)];
+    const action = $validMoves[random($validMoves.length - 1)];
     playTurn(action);
   }
 
@@ -52,14 +52,14 @@
 
   $: isValid = position => {
     if ($phase === REMOVE_CARDS && $selectedPosition !== -1) {
-      return !!_.find(
+      return !!find(
         $validMoves,
         ({ index1, index2 }) =>
           (index1 === position && index2 === $selectedPosition) ||
           (index1 === $selectedPosition && index2 === position)
       );
     }
-    return !!_.find(
+    return !!find(
       $validMoves,
       ({ index, index1, index2 }) =>
         index === position || index1 === position || index2 === position

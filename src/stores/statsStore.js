@@ -2,7 +2,7 @@ import { user } from './authStore'
 import { writable, get, derived } from 'svelte/store'
 import { stats } from '../firebase/stats'
 
-import _ from 'lodash'
+import {orderBy} from 'lodash-es'
 
 const SORT_BY = 'gamesWon'
 
@@ -39,6 +39,6 @@ stats.onSnapshot((snapshot) => {
 	}
 })
 
-const sortedStats = derived(statsStore, ($stats) => _.orderBy($stats, ['gamesWon'], ['desc']))
+const sortedStats = derived(statsStore, ($stats) => orderBy($stats, ['gamesWon'], ['desc']))
 
 export { sortedStats as stats }

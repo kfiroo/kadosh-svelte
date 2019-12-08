@@ -1,24 +1,21 @@
 <script>
-    import _ from 'lodash'
+    import {countBy, sample, keyBy, mapValues} from 'lodash-es'
     import Card from './Card.svelte'
     import { deck } from '../stores/gameStores'
 
     const suits = ['spades', 'diamonds', 'clubs', 'hearts']
     const monkeys = ['🙈', '🙉', '🙊']
 
-    const random = value => ({value, suit: _.sample(suits)})
+    const random = value => ({value, suit: sample(suits)})
     const NON_FACE_CARDS = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10]
     const FACE_CARDS = ['J', 'Q', 'K']
 
-    $: remaining = _.countBy($deck, 'value')
-    $: stats = _([...NON_FACE_CARDS, ...FACE_CARDS])
-        .keyBy()
-        .mapValues(v => {
+    $: remaining = countBy($deck, 'value')
+    $: stats = mapValues(keyBy([...NON_FACE_CARDS, ...FACE_CARDS]), v => {
             const r = remaining[v] || 0
             const c = r && Math.round(r / $deck.length * 100)
-            return r ? `${r} (${c}%)` : _.sample(monkeys)
+            return r ? `${r} (${c}%)` : sample(monkeys)
         })
-        .value()
 </script>
 
 <style>

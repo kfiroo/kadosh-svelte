@@ -1,4 +1,4 @@
-const _ = require('lodash')
+import {flatMap, every, cloneDeep, last} from 'lodash-es'
 
 const SUITES = ['spades', 'diamonds', 'clubs', 'hearts']
 const CARDS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
@@ -8,7 +8,7 @@ const GAME_OVER = 'GAME_OVER'
 const WINNER = 'WINNER'
 
 function createDeck() {
-    return _.flatMap(SUITES, suit =>
+    return flatMap(SUITES, suit =>
         CARDS.map(value => ({
             suit,
             value
@@ -28,12 +28,12 @@ function shuffleDeck(deck, n = 1000) {
 }
 
 const hasValidMoves = state => getAllValidMoves(state).length > 0
-const isBoardFull = state => _.every(state.board)
+const isBoardFull = state => every(state.board)
 const isFaceCard = card => card && ['J', 'Q', 'K'].includes(card.value)
 const getCardValue = card => card === null ? 0 : card.value === 'A' ? 1 : parseInt(card.value, 10)
 const gameInProgress = state => [PLACE_CARD, REMOVE_CARDS].includes(state.phase)
-const isWinner = state => _.every(BOARD_MAP, (a, c) =>
-    _.every(a, i =>
+const isWinner = state => every(BOARD_MAP, (a, c) =>
+    every(a, i =>
         state.board[i] && state.board[i].value === c
     )
 )
@@ -137,7 +137,7 @@ function playTurn(state, action) {
     if (state.phase !== action.type) {
         throw new Error('Invalid action')
     }
-    const nextState = _.cloneDeep(state)
+    const nextState = cloneDeep(state)
     switch (action.type) {
         case PLACE_CARD:
             placeCard(nextState, action)
@@ -154,24 +154,22 @@ function playTurn(state, action) {
 
 function getAllValidMoves(state) {
     if (state.phase === PLACE_CARD) {
-        const card = _.last(state.deck)
+        const card = last(state.deck)
         if (isFaceCard(card)) {
-            return _(BOARD_MAP[card.value])
+            return BOARD_MAP[card.value]
                 .filter(i => state.board[i] === null)
                 .map(index => ({
                     type: PLACE_CARD,
                     index
                 }))
-                .value()
         }
-        return _(state.board)
+        return state.board
             .map((card, i) => card === null ? i : null)
             .filter(x => x !== null)
             .map(index => ({
                 type: PLACE_CARD,
                 index
             }))
-            .value()
     }
     if (state.phase === REMOVE_CARDS) {
         const moves = []
@@ -224,7 +222,7 @@ function playGame(getNextAction, initialState = createInitialState()) {
             state = playTurn(state, action)
             actions.push({
                 action,
-                state: _.cloneDeep(state)
+                state: cloneDeep(state)
             })
         } catch (e) {
             console.error(e)
@@ -242,7 +240,7 @@ function playGame(getNextAction, initialState = createInitialState()) {
     }
 }
 
-module.exports = {
+export {
     PLACE_CARD,
     REMOVE_CARDS,
     GAME_OVER,

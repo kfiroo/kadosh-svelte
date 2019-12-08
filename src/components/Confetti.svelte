@@ -1,5 +1,5 @@
 <script>
-    import _ from 'lodash'
+    import {times, random, reduce} from 'lodash-es'
 	export let amount = 0
 
     import { onMount } from 'svelte';
@@ -8,8 +8,8 @@
 	const maxSize = 16
 	const minSize = 8
 
-    let confetti = _.times(amount, id => {
-        const width = _.random(minSize, maxSize)
+    let confetti = times(amount, id => {
+        const width = random(minSize, maxSize)
         const height = width * 0.4
         return {
             id,
@@ -20,12 +20,12 @@
             left: Math.random() * 100 + '%',
             opacity: Math.random() + 0.5,
             transform: 'rotate(' + Math.random() * 360 + 'deg)',
-            dx: _.random(-0.1, 0.1),
-            dy: _.random(-0.1, 0.1),
+            dx: random(-0.1, 0.1),
+            dy: random(-0.1, 0.1),
         }
     })
 
-    const getStyle = c => _.reduce(c, (s, v, k) => k === 'id' || k === 'dx' || k === 'dy' ? s : `${s} ${k}: ${v};`, '')
+    const getStyle = c => reduce(c, (s, v, k) => k === 'id' || k === 'dx' || k === 'dy' ? s : `${s} ${k}: ${v};`, '')
 
 	onMount(() => {
 		let frame;
