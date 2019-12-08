@@ -22,6 +22,8 @@
   ul {
     list-style: none;
     padding: 0;
+    max-height: 65vh;
+    overflow: auto;
   }
   li {
     display: flex;
