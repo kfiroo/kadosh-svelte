@@ -20,6 +20,11 @@
     playGame
   } from "./game";
 
+  const setPointerEventsNone = e => {
+    const target = e.currentTarget || e.target
+    target.style.pointerEvents = 'none'
+  }
+
   import {
     validMoves,
     phase,
@@ -248,6 +253,7 @@
       class="card next-card"
       class:disabled={$phase === GAME_OVER}
       on:click={playTurn2}
+      on:outrostart={setPointerEventsNone}
       out:fly={$deck.length === 52 ? {} : lastPlacedPosition}>
       <Card
         card={$nextCard}

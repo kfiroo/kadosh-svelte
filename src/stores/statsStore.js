@@ -39,6 +39,6 @@ stats.onSnapshot((snapshot) => {
 	}
 })
 
-const sortedStats = derived(statsStore, ($stats) => orderBy($stats, ['gamesWon'], ['desc']))
+const sortedStats = derived(statsStore, ($stats) => orderBy($stats, ['gamesWon', 'gamesPlayed'], ['desc', 'asc']))
 
 export { sortedStats as stats }
