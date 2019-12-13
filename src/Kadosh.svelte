@@ -1,5 +1,5 @@
 <script>
-  import {random, find, sample, filter} from "lodash-es";
+  import {random, find} from "lodash-es";
   import Card from "./components/Card.svelte";
   import Confetti from "./components/Confetti.svelte";
   import QAB from "./components/QuickActionBar.svelte";
@@ -54,20 +54,6 @@
     x: -120 + ($lastPlaced % 4) * 80,
     y: -450 + Math.floor($lastPlaced / 4) * 105
   };
-
-  const suits = ['spades', 'diamonds', 'clubs', 'hearts']
-  let placeCardHint = null
-  $: if ($phase === PLACE_CARD && getCardValue($nextCard) < 10) {
-      const v = 10 - getCardValue($nextCard)
-      const r = filter($deck, x => x.value == v).length
-      const c = r && Math.round(r / $deck.length * 100)
-      placeCardHint = {
-        card: {value: v, suit: sample(suits)},
-        stats: `${r} (${c}%)`
-    }
-  } else {
-      placeCardHint = null
-  }
 
   $: isValid = position => {
     if ($phase === REMOVE_CARDS && $selectedPosition !== -1) {
@@ -186,7 +172,6 @@
   .next-wrapper > span {
     grid-area: 1/3/2/4;
     justify-self: start;
-    align-self: start;
     font-size: 1.4em;
   }
 
@@ -236,26 +221,6 @@
   .selected {
     box-shadow: 0px 0px 2px 4px #eee251 !important;
   }
-  .placeCardHint {
-    grid-area: 1/3/2/4;
-    justify-self: start;
-    align-self: end;
-    transform: scale(0.5);
-    transform-origin: bottom left;
-    display: grid;
-    grid-template: "card stats" auto / min-content max-content;
-    grid-gap: 20px;
-    margin-right: -42px;
-  }
-  .placeCardHint .card {
-    grid-area: card;
-  }
-  .placeCardHint label {
-    grid-area: stats;
-    justify-self: start;
-    align-self: center;
-    font-size: 1.8em;
-  }
 </style>
 
 <QAB />
@@ -282,26 +247,20 @@
 </div>
 
 <div class="next-wrapper">
-    <div class="rtl restart" on:click={restartGame}>⟳</div>
-    {#each [$nextCard] as card (card ? `${card.value}_${card.suit}` : '')}
+  <div class="rtl restart" on:click={restartGame}>⟳</div>
+  {#each [$nextCard] as card (card ? `${card.value}_${card.suit}` : '')}
     <div
-        class="card next-card"
-        class:disabled={$phase === GAME_OVER}
-        on:click={playTurn2}
-        on:outrostart={setPointerEventsNone}
-        out:fly={$deck.length === 52 ? {} : lastPlacedPosition}>
-        <Card
-            card={$nextCard}
-            showCard={$phase !== REMOVE_CARDS && $phase !== WINNER} />
+      class="card next-card"
+      class:disabled={$phase === GAME_OVER}
+      on:click={playTurn2}
+      on:outrostart={setPointerEventsNone}
+      out:fly={$deck.length === 52 ? {} : lastPlacedPosition}>
+      <Card
+        card={$nextCard}
+        showCard={$phase !== REMOVE_CARDS && $phase !== WINNER} />
     </div>
-    {/each}
-    <span>{deckLengthIndicator}</span>
-    {#if placeCardHint}
-    <div class="placeCardHint">
-        <label>{placeCardHint.stats}</label>
-        <Card showCard={true} card={placeCardHint.card} />
-    </div>
-    {/if}
+  {/each}
+  <span>{deckLengthIndicator}</span>
 </div>
 
 {#if $phase === WINNER}
