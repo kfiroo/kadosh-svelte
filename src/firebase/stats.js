@@ -1,18 +1,20 @@
-import { db } from './firebase'
+import {db} from './firebase'
+import {getCardValue} from '../game'
 
 export const stats = db.collection('stats')
+const gameLogs = db.collection('gameLogs')
 
 export const createUserStats = (uid, displayName, photoUrl, gamesPlayed = 0, gamesWon = 0) => {
-	stats.add({
-		uid,
-		displayName,
-		photoUrl,
-		gamesPlayed,
-		gamesWon
-	})
+    stats.add({
+        uid,
+        displayName,
+        photoUrl,
+        gamesPlayed,
+        gamesWon
+    })
 }
 
-export const logGame = async (uid, didWin = false) => {
+export const logGame = async (uid, didWin = false, state) => {
     if (!uid) {
         console.error('[stats.logGame] Missing `uid` param')
         return
@@ -32,4 +34,12 @@ export const logGame = async (uid, didWin = false) => {
     }
 
     docToUpdate.update(updated)
+
+    const gameLog = {
+        deck: state.initialDeck.map(getCardValue),
+        actions: state.actions,
+        finalPhase: state.phase
+    }
+
+    gameLogs.add(gameLog)
 }

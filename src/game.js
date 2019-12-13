@@ -30,7 +30,23 @@ function shuffleDeck(deck, n = 1000) {
 const hasValidMoves = state => getAllValidMoves(state).length > 0
 const isBoardFull = state => every(state.board)
 const isFaceCard = card => card && ['J', 'Q', 'K'].includes(card.value)
-const getCardValue = card => card === null ? 0 : card.value === 'A' ? 1 : parseInt(card.value, 10)
+const getCardValue = card => {
+    if (!card) {
+        return 0
+    }
+    switch (card.value) {
+        case 'A':
+            return 1
+        case 'J':
+            return 11
+        case 'Q':
+            return 12
+        case 'K':
+            return 13
+        default:
+            return parseInt(card.value, 10)
+    }
+}
 const gameInProgress = state => [PLACE_CARD, REMOVE_CARDS].includes(state.phase)
 const isWinner = state => every(BOARD_MAP, (a, c) =>
     every(a, i =>
@@ -125,9 +141,12 @@ function placeCard(state, action) {
 // API
 
 function createInitialState({shuffleTimes} = {}) {
+    const deck = shuffleDeck(createDeck(), shuffleTimes)
     return {
         board: Array(16).fill(null),
-        deck: shuffleDeck(createDeck(), shuffleTimes),
+        deck,
+        initialDeck: deck,
+        actions: [],
         removedCards: [],
         phase: PLACE_CARD
     }
@@ -149,6 +168,7 @@ function playTurn(state, action) {
             throw new Error('Unknown action type')
     }
     calcNextPhase(nextState)
+    nextState.actions.push(action)
     return nextState
 }
 
