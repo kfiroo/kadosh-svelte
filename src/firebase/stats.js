@@ -35,6 +35,10 @@ export const logGame = async (uid, didWin = false, state) => {
 
     docToUpdate.update(updated)
 
+    if (!state) {
+        return
+    }
+
     const gameLog = {
         uid,
         userName: currentData.displayName,
