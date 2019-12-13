@@ -145,7 +145,7 @@ function createInitialState({shuffleTimes} = {}) {
     return {
         board: Array(16).fill(null),
         deck,
-        initialDeck: deck,
+        initialDeck: _.cloneDeep(deck),
         actions: [],
         removedCards: [],
         phase: PLACE_CARD
