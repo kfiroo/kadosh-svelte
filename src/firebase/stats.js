@@ -36,6 +36,8 @@ export const logGame = async (uid, didWin = false, state) => {
     docToUpdate.update(updated)
 
     const gameLog = {
+        uid,
+        userName: currentData.displayName,
         deck: state.initialDeck.map(getCardValue),
         actions: state.actions,
         finalPhase: state.phase
