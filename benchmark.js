@@ -6,7 +6,6 @@ const {
     playGame
 } = require('./src/game')
 
-
 const randomNextAction = state => {
     const moves = getAllValidMoves(state)
     return moves[_.random(moves.length - 1)]
@@ -17,12 +16,14 @@ const count = {
     [GAME_OVER]: 0
 }
 
-_.times(100000, i => {
+const n = 1000
+_.times(n, i => {
     count[playGame(randomNextAction).finalState.phase]++
     console.log('Game', i, count[WINNER] / i * 100)
 })
 
-console.log(`Played 100,000 games`)
-console.log(`Won ${count[WINNER]} games`)
-console.log(`Lost ${count[GAME_OVER]} games`)
-console.log(`Win rate: ${count[WINNER] / 100000 * 100}%`)
+console.log()
+console.log(`Played ${n} kadosh games`)
+console.log(`Won ${count[WINNER]}`)
+console.log(`Lost ${count[GAME_OVER]}`)
+console.log(`Win rate: ${count[WINNER] / n * 100}%`)

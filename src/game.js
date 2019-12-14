@@ -1,5 +1,3 @@
-import {flatMap, every, cloneDeep, last} from 'lodash-es'
-
 const SUITES = ['spades', 'diamonds', 'clubs', 'hearts']
 const CARDS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 const PLACE_CARD = 'PLACE_CARD'
@@ -7,13 +5,31 @@ const REMOVE_CARDS = 'REMOVE_CARDS'
 const GAME_OVER = 'GAME_OVER'
 const WINNER = 'WINNER'
 
+const BOARD_MAP = {
+    J: [4, 7, 8, 11],
+    Q: [1, 2, 13, 14],
+    K: [0, 3, 12, 15]
+}
+
+// 0  1  2  3
+// 4  5  6  7
+// 8  9  10 11
+// 12 13 14 15
+
+// K Q Q K
+// J * * J
+// J * * J
+// K Q Q K
+
 function createDeck() {
-    return flatMap(SUITES, suit =>
-        CARDS.map(value => ({
+    const deck = []
+    SUITES.forEach(suit =>
+        CARDS.forEach(value => deck.push({
             suit,
             value
         }))
     )
+    return deck
 }
 
 function shuffleDeck(deck, n = 1000) {
@@ -27,8 +43,9 @@ function shuffleDeck(deck, n = 1000) {
     return deck
 }
 
+const last = a => a[a.length - 1]
 const hasValidMoves = state => getAllValidMoves(state).length > 0
-const isBoardFull = state => every(state.board)
+const isBoardFull = state => state.board.every(x => x !== null)
 const isFaceCard = card => card && ['J', 'Q', 'K'].includes(card.value)
 const getCardValue = card => {
     if (!card) {
@@ -48,27 +65,11 @@ const getCardValue = card => {
     }
 }
 const gameInProgress = state => [PLACE_CARD, REMOVE_CARDS].includes(state.phase)
-const isWinner = state => every(BOARD_MAP, (a, c) =>
-    every(a, i =>
-        state.board[i] && state.board[i].value === c
+const isWinner = state => Object.keys(BOARD_MAP).every(suit =>
+    BOARD_MAP[suit].every(i =>
+        state.board[i] && state.board[i].value === suit
     )
 )
-
-const BOARD_MAP = {
-    J: [4, 7, 8, 11],
-    Q: [1, 2, 13, 14],
-    K: [0, 3, 12, 15]
-}
-
-// 0  1  2  3
-// 4  5  6  7
-// 8  9  10 11
-// 12 13 14 15
-
-// K Q Q K
-// J * * J
-// J * * J
-// K Q Q K
 
 function getNextPhase(state) {
     if (state.phase === GAME_OVER) {
@@ -140,8 +141,8 @@ function placeCard(state, action) {
 
 // API
 
-function createInitialState({shuffleTimes} = {}) {
-    const deck = shuffleDeck(createDeck(), shuffleTimes)
+function createInitialState({shuffleTimes, deck} = {}) {
+    deck = deck || shuffleDeck(createDeck(), shuffleTimes)
     return {
         board: Array(16).fill(null),
         deck,
@@ -152,11 +153,22 @@ function createInitialState({shuffleTimes} = {}) {
     }
 }
 
+function cloneState(state) {
+    return {
+        board: [...state.board],
+        deck: [...state.deck],
+        initialDeck: state.initialDeck,
+        actions: [...state.actions],
+        removedCards: [...state.removedCards],
+        phase: state.phase
+    }
+}
+
 function playTurn(state, action) {
     if (state.phase !== action.type) {
         throw new Error('Invalid action')
     }
-    const nextState = cloneDeep(state)
+    const nextState = cloneState(state)
     switch (action.type) {
         case PLACE_CARD:
             placeCard(nextState, action)
@@ -240,10 +252,7 @@ function playGame(getNextAction, initialState = createInitialState()) {
         // console.log(action)
         try {
             state = playTurn(state, action)
-            actions.push({
-                action,
-                state: cloneDeep(state)
-            })
+            actions.push(action)
         } catch (e) {
             console.error(e)
         }
@@ -260,11 +269,13 @@ function playGame(getNextAction, initialState = createInitialState()) {
     }
 }
 
-export {
+module.exports = {
     PLACE_CARD,
     REMOVE_CARDS,
     GAME_OVER,
     WINNER,
+
+    BOARD_MAP,
 
     createInitialState,
     playTurn,

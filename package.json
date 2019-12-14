@@ -2,6 +2,7 @@
     "name": "kadosh-svelte",
     "version": "1.0.0",
     "devDependencies": {
+        "@tensorflow/tfjs-node": "^1.4.0",
         "firebase": "^7.5.1",
         "jest": "^24.9.0",
         "rollup": "^1.12.0",
