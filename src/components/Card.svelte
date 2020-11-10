@@ -40,7 +40,7 @@
 
 <style>
 	.card {
-        background-image: url("http://einaregilsson.github.io/cards.js/img/cards.png");
+        background-image: url("cards.png");
         width: 69px;
         height: 94px;
 	}

@@ -80,8 +80,7 @@
     playPosition(position);
   };
 
-  const tahatSrc =
-    "https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg";
+  const tahatSrc = "tahat.jpg";
   const preTahat = new Image();
   preTahat.src = tahatSrc;
 </script>
@@ -139,11 +138,11 @@
 
   .grid.disabled:after {
     content: "";
-    background: url(https://dok7xy59qfw9h.cloudfront.net/587/070/202/-239996995-1t62joi-8mq5akftktd5se5/original/file.jpg);
+    background: url(tahat.jpg) -150px center;
+    background-size: cover;
     position: absolute;
     width: 100%;
     height: 100%;
-    background-position: -50px center;
     animation: tahat;
     animation-duration: 1942ms;
     animation-iteration-count: infinite;
