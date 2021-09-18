@@ -125,6 +125,10 @@ export const playPosition = (position) => {
 }
 
 export const restartGame = () => {
+    if (!window.confirm('Are you Harkash?!')) {
+        return;
+    }
+
     analytics.logEvent('restart_game')
 
     // aborting mid-game. if the game had finished, we already logged it
