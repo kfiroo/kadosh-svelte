@@ -273,6 +273,10 @@ function playGame(getNextAction, initialState = createInitialState()) {
     }
 }
 
+function isGameOver(state) {
+    return state.phase === WINNER || state.phase === GAME_OVER;
+}
+
 module.exports = {
     PLACE_CARD,
     REMOVE_CARDS,
@@ -286,5 +290,6 @@ module.exports = {
     getAllValidMoves,
     isFaceCard,
     getCardValue,
-    playGame
+    playGame,
+    isGameOver,
 }

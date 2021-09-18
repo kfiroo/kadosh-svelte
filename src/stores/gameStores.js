@@ -5,6 +5,7 @@ import {
     playTurn as playTurnInternal,
     getAllValidMoves,
     getCardValue,
+    isGameOver,
 
     PLACE_CARD,
     REMOVE_CARDS,
@@ -125,8 +126,10 @@ export const playPosition = (position) => {
 }
 
 export const restartGame = () => {
-    if (!window.confirm('Are you Harkash?!')) {
-        return;
+    if (!isGameOver(get(state))) {
+        if (!window.confirm('Are you Harkash?!')) {
+            return;
+        }
     }
 
     analytics.logEvent('restart_game')
