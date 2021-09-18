@@ -91,6 +91,11 @@
     gameTimer = formatGameTimer(t);
   }, 100);
 
+  function backTrap(event) {
+    event.preventDefault();
+    return event.returnValue = 'Why are you Harkash?';
+  }
+
   const tahatSrc = "tahat.jpg";
   const preTahat = new Image();
   preTahat.src = tahatSrc;
@@ -241,6 +246,8 @@
     text-align: center;
   }
 </style>
+
+<svelte:window on:beforeunload={backTrap}/>
 
 <QAB />
 
