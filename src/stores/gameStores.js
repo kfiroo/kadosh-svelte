@@ -34,14 +34,21 @@ phase.subscribe(($phase) => {
     if ($phase !== REMOVE_CARDS && get(selectedPosition) !== -1) {
         selectedPosition.set(-1)
     }
+    let gameEndedAt = null;
 
     if ($phase === GAME_OVER) {
+        gameEndedAt = Date.now()
         analytics.logEvent('game_lost')
         logGame(false, get(state))
     } else if ($phase === WINNER) {
+        gameEndedAt = Date.now()
         analytics.logEvent('game_won')
         logGame(true, get(state))
     }
+    state.set({
+        ...get(state),
+        gameEndedAt
+    })
 })
 
 export const lastPlaced = writable(0)

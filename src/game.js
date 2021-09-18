@@ -149,7 +149,9 @@ function createInitialState({shuffleTimes, deck} = {}) {
         initialDeck: [...deck],
         actions: [],
         removedCards: [],
-        phase: PLACE_CARD
+        phase: PLACE_CARD,
+        gameStartedAt: Date.now(),
+        gameEndedAt: null
     }
 }
 
@@ -160,7 +162,9 @@ function cloneState(state) {
         initialDeck: state.initialDeck,
         actions: [...state.actions],
         removedCards: [...state.removedCards],
-        phase: state.phase
+        phase: state.phase,
+        gameStartedAt: state.gameStartedAt,
+        gameEndedAt: state.gameEndedAt
     }
 }
 

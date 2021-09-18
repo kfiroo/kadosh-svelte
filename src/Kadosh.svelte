@@ -80,6 +80,17 @@
     playPosition(position);
   };
 
+  const padZero = s => `0${s}`.substr(-2)
+  const formatGameTimer = t => `${padZero(t.getMinutes())}:${padZero(t.getSeconds())}`;
+
+  let gameTimer = formatGameTimer(new Date(0));
+  setInterval(() => {
+    const t = $phase === GAME_OVER || $phase === WINNER ?
+            new Date($state.gameEndedAt - $state.gameStartedAt) :
+            new Date(Date.now() - $state.gameStartedAt);
+    gameTimer = formatGameTimer(t);
+  }, 100);
+
   const tahatSrc = "tahat.jpg";
   const preTahat = new Image();
   preTahat.src = tahatSrc;
@@ -220,6 +231,15 @@
   .selected {
     box-shadow: 0px 0px 2px 4px #eee251 !important;
   }
+
+  .timer {
+    display: none;
+    padding-top: 20px;
+    width: 306px;
+    margin: auto;
+    position: relative;
+    text-align: center;
+  }
 </style>
 
 <QAB />
@@ -260,6 +280,10 @@
     </div>
   {/each}
   <span>{deckLengthIndicator}</span>
+</div>
+
+<div class="timer">
+  <span>{gameTimer}</span>
 </div>
 
 {#if $phase === WINNER}

@@ -44,8 +44,11 @@ export const logGame = async (uid, didWin = false, state) => {
         userName: currentData.displayName,
         deck: state.initialDeck.map(getCardValue),
         actions: state.actions,
-        finalPhase: state.phase
+        finalPhase: state.phase,
+        gameTime: state.gameEndedAt - state.gameStartedAt
     }
 
     gameLogs.add(gameLog)
+
+    console.log(gameLog)
 }
